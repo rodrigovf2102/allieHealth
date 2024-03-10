@@ -42,7 +42,7 @@ const Home = () => {
           marginBottom: 3,
         }}
       >
-        <UploadInput />
+        <UploadInput refetch={refetch}/>
         <Button variant="contained" onClick={() => setIsCreateUserOpen(true)}>
           Create User
         </Button>

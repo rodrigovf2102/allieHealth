@@ -1,16 +1,17 @@
 import { Request, Response, Router } from "express";
-import { db } from "./db";
 import multer from "multer";
 import os from "os";
 import { service } from "./services";
-import { User } from "./protocols";
+import { User, UsersJson } from "./protocols";
+import { repository } from "./repository";
+import fs from 'fs';
 
 const router = Router();
 
 const upload = multer({ dest: os.tmpdir() });
 
 router.get("/users", (req: Request, res: Response) => {
-  const users = db.prepare("SELECT * FROM users").all();
+  const users = repository.getAllUsers();
 
   res.json({
     users: users,
@@ -24,21 +25,9 @@ router.post("/users", (req: Request, res: Response) => {
     return res.status(400).send(errors);
   }
 
-  const user = db
-    .prepare(
-      "INSERT INTO users (first_name, last_name, email, phone_number, day_of_birth) VALUES (@first_name, @last_name, @email, @phone_number, @day_of_birth)",
-    )
-    .run({
-      first_name: userRequest.first_name,
-      last_name: userRequest.last_name,
-      email: userRequest.email,
-      phone_number: userRequest.phone_number || '',
-      day_of_birth: userRequest.day_of_birth || ''
-    });
+  repository.postUser(userRequest);
 
-  res.json({
-    id: user.lastInsertRowid,
-  });
+  res.sendStatus(201);
 });
 
 router.post(
@@ -47,7 +36,8 @@ router.post(
   (req: Request, res: Response) => {
     const file = req.file;
 
-    console.log(file);
+    const users : UsersJson = JSON.parse(fs.readFileSync(file?.path || '', 'utf-8'));
+    service.insertBulkUsers(users);
 
     res.sendStatus(200);
   },

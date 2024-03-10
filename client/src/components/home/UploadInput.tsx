@@ -13,7 +13,11 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
 });
 
-const UploadInput = () => {
+type Props = {
+  refetch: () => void;
+}
+
+const UploadInput = ({ refetch } : Props) => {
   const [_, executePost] = useAxios(
     {
       url: `${process.env.REACT_APP_SERVER_BASE_URL}/users/bulk`,
@@ -25,11 +29,15 @@ const UploadInput = () => {
     { manual: true },
   );
 
-  const onSelect = (event: any) => {
-    const data = new FormData();
-    data.append("file", event.target.files[0]);
-
-    executePost({ data });
+  const onSelect = async (event: any) => {
+    try {
+      const data = new FormData();
+      data.append("file", event.target.files[0]);
+      await executePost({ data });
+      refetch()
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
