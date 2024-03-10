@@ -1,13 +1,15 @@
 import { Box, Modal } from "@mui/material";
 import React from "react";
 import CreateForm from "./CreateForm";
+import { RefetchFunction } from "axios-hooks";
 
 type Props = {
   open: boolean;
   handleClose: () => void;
+  refetch: RefetchFunction<any, any>
 };
 
-const CreateUserModal = ({ open, handleClose }: Props) => {
+const CreateUserModal = ({ open, handleClose, refetch }: Props) => {
   return (
     <Modal open={open} onClose={handleClose}>
       <Box
@@ -22,7 +24,7 @@ const CreateUserModal = ({ open, handleClose }: Props) => {
           p: 4,
         }}
       >
-        <CreateForm onSubmit={handleClose} />
+        <CreateForm onSubmit={() => {handleClose(); refetch()}} />
       </Box>
     </Modal>
   );

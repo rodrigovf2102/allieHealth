@@ -2,6 +2,8 @@ import { Request, Response, Router } from "express";
 import { db } from "./db";
 import multer from "multer";
 import os from "os";
+import { service } from "./services";
+import { User } from "./protocols";
 
 const router = Router();
 
@@ -16,9 +18,10 @@ router.get("/users", (req: Request, res: Response) => {
 });
 
 router.post("/users", (req: Request, res: Response) => {
-  if (!req.body.firstName || !req.body.lastName || !req.body.email) {
-    res.sendStatus(400);
-    return;
+  const userRequest : User = req.body;
+  const errors = service.treatUser(userRequest);
+  if(errors.length > 0){
+    return res.status(400).send(errors);
   }
 
   const user = db

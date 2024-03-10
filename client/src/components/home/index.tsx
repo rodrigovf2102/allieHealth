@@ -51,6 +51,7 @@ const Home = () => {
       <CreateUserModal
         open={isCreateUserOpen}
         handleClose={() => setIsCreateUserOpen(!isCreateUserOpen)}
+        refetch={refetch}
       />
     </>
   );

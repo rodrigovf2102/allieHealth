@@ -1,5 +1,6 @@
 import { Alert, Box, Button, TextField } from "@mui/material";
 import useAxios from "axios-hooks";
+import { useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 
 type Props = {
@@ -15,10 +16,15 @@ const CreateForm = ({ onSubmit }: Props) => {
     },
     { manual: true },
   );
+  const [errorMessages, setErrorMessages] = useState<string[]>([]);
 
   const onFormSubmit = async (data: FieldValues) => {
-    await executePost({ data });
-    onSubmit();
+    try {
+      await executePost({ data });
+      onSubmit();
+    } catch (error : any) {
+      if(error.response.data) setErrorMessages(error.response.data)
+    }
   };
 
   return (
@@ -32,9 +38,12 @@ const CreateForm = ({ onSubmit }: Props) => {
           }}
         >
           {error && (
-            <Alert severity="error">
-              Sorry - there was an error creating the user
-            </Alert>
+            <>
+              {errorMessages.length > 0 ? errorMessages.map(msg => <Alert severity="error">{msg}</Alert>) : 
+                <Alert severity="error">
+                  Sorry - there was an error creating the user
+                </Alert>} 
+            </>
           )}
           <TextField
             label="First Name"
