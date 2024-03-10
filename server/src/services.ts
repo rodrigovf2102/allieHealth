@@ -3,10 +3,10 @@ import { User } from "./protocols";
 function treatUser(user: User){
     const errors : string[] = [];
     const emptyError = (key:string) => `The user ${key} is empty` 
-    if (!user.firstName){
+    if (!user.first_name){
         errors.push(emptyError("first name"))
     }
-    if(!user.lastName){
+    if(!user.last_name){
         errors.push(emptyError("last name"))
     } 
     if(!user.email) {

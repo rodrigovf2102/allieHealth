@@ -26,12 +26,14 @@ router.post("/users", (req: Request, res: Response) => {
 
   const user = db
     .prepare(
-      "INSERT INTO users (first_name, last_name, email) VALUES (@firstName, @lastName, @email)",
+      "INSERT INTO users (first_name, last_name, email, phone_number, day_of_birth) VALUES (@first_name, @last_name, @email, @phone_number, @day_of_birth)",
     )
     .run({
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      email: req.body.email,
+      first_name: userRequest.first_name,
+      last_name: userRequest.last_name,
+      email: userRequest.email,
+      phone_number: userRequest.phone_number || '',
+      day_of_birth: userRequest.day_of_birth || ''
     });
 
   res.json({

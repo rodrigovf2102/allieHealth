@@ -48,12 +48,12 @@ const CreateForm = ({ onSubmit }: Props) => {
           <TextField
             label="First Name"
             variant="outlined"
-            {...register("firstName")}
+            {...register("first_name")}
           />
           <TextField
             label="Last Name"
             variant="outlined"
-            {...register("lastName")}
+            {...register("last_name")}
           />
           <TextField label="Email" variant="outlined" {...register("email")} />
           <Button variant="contained" type="submit" disabled={loading}>
